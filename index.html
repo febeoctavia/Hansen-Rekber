@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hansen Rekber - Kalkulator & Form Transaksi</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0047BA;
+            --dark-blue: #0A3981;
+            --sky-blue: #00A8E8;
+            --light-bg: #F0F4F9;
+            --card-bg: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+            --success-color: #22C55E;
+            --warning-color: #E11D48;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 71, 186, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+            padding: 24px 20px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-img {
+            max-width: 170px;
+            height: auto;
+            display: block;
+            margin: 0 auto 12px auto;
+        }
+
+        /* Notice Banner */
+        .notice-banner {
+            background: #FFF1F2;
+            border: 1px solid #FECDD3;
+            color: #9F1239;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: pulse-border 2s infinite;
+        }
+
+        .notice-banner i {
+            font-size: 16px;
+            color: #E11D48;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: inset 0 0 0 0 rgba(225, 29, 72, 0.2); }
+            50% { box-shadow: inset 0 0 8px 0 rgba(225, 29, 72, 0.4); }
+            100% { box-shadow: inset 0 0 0 0 rgba(225, 29, 72, 0.2); }
+        }
+
+        /* Stepper Navigation */
+        .stepper {
+            display: flex;
+            background: #F8FAFC;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .step-item {
+            flex: 1;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step-item.active {
+            color: var(--primary-blue);
+            background: #FFFFFF;
+        }
+
+        .step-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-blue);
+        }
+
+        .step-number {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #E2E8F0;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .step-item.active .step-number {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Step Content */
+        .step-content {
+            padding: 24px 20px;
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            background: #F8FAFC;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-control.no-prefix {
+            padding-left: 14px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 4px rgba(0, 71, 186, 0.1);
+        }
+
+        textarea.form-control {
+            resize: none;
+            height: 80px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Radio Options Grid */
+        .radio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .radio-card {
+            position: relative;
+        }
+
+        .radio-card input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .radio-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 4px;
+            background: #F8FAFC;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .radio-card input:checked + .radio-label {
+            border-color: var(--primary-blue);
+            background: #EFF6FF;
+            color: var(--primary-blue);
+        }
+
+        /* Calculation Summary Card */
+        .calc-card {
+            background: #F8FAFC;
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            margin-top: 16px;
+        }
+
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .calc-row:last-child {
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .calc-row.total {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--primary-blue);
+        }
+
+        .calc-label {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .calc-value {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 71, 186, 0.25);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-wa {
+            background: #25D366;
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-wa:active {
+            transform: scale(0.98);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--border-color);
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Modal Popup */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 999;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .modal-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .preview-box {
+            background: #F8FAFC;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 11px;
+            text-align: left;
+            color: #334155;
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+            margin-bottom: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Notice Banner -->
+    <div class="notice-banner">
+        <i class="fa-solid fa-shield-triangle"></i>
+        <span>Transfer HANYA melalui rekening a.n PT. HANSEN GLOBAL MANDIRI</span>
+    </div>
+
+    <!-- Header Logo -->
+    <div class="header">
+        <img src="213485.jpg" alt="Hansen Rekber Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/170x100?text=HANSEN+REKBER'">
+    </div>
+
+    <!-- Stepper Navigation -->
+    <div class="stepper">
+        <div class="step-item active" id="step1-tab">
+            <span class="step-number">1</span>
+            <span>Kalkulator</span>
+        </div>
+        <div class="step-item" id="step2-tab">
+            <span class="step-number">2</span>
+            <span>Form Transaksi</span>
+        </div>
+    </div>
+
+    <!-- STEP 1: KALKULATOR -->
+    <div class="step-content active" id="step1-content">
+        <div class="form-group">
+            <label class="form-label">Masukkan Nilai Transaksi</label>
+            <div class="input-wrapper">
+                <span class="input-prefix">Rp</span>
+                <input type="text" id="input-nominal" class="form-control" placeholder="0" inputmode="numeric">
+            </div>
+        </div>
+
+        <div class="calc-card">
+            <div class="calc-row">
+                <span class="calc-label">Nilai Transaksi</span>
+                <span class="calc-value" id="res-nominal">Rp 0</span>
+            </div>
+            <div class="calc-row">
+                <span class="calc-label">Biaya Rekber</span>
+                <span class="calc-value" id="res-fee">Rp 0</span>
+            </div>
+            <div class="calc-row total">
+                <span class="calc-label" style="color: var(--primary-blue);">Total Transaksi</span>
+                <span class="calc-value" id="res-total">Rp 0</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 24px;">
+            <button class="btn btn-primary" id="btn-to-step2">
+                <span>Lanjut ke Form Transaksi</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 2: FORM TRANSAKSI -->
+    <div class="step-content" id="step2-content">
+        <div class="calc-card" style="margin-bottom: 20px; background: #EFF6FF; border-color: #BFDBFE;">
+            <div class="calc-row">
+                <span class="calc-label">Nilai Transaksi</span>
+                <span class="calc-value" id="form-summary-nominal">Rp 0</span>
+            </div>
+            <div class="calc-row">
+                <span class="calc-label">Biaya Rekber</span>
+                <span class="calc-value" id="form-summary-fee">Rp 0</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Biaya Rekber Ditanggung Oleh</label>
+            <div class="radio-grid">
+                <div class="radio-card">
+                    <input type="radio" name="fee_bearer" id="fee-pembeli" value="Pembeli" checked>
+                    <label for="fee-pembeli" class="radio-label">
+                        <i class="fa-solid fa-cart-shopping" style="margin-bottom:4px;"></i>
+                        <span>Pembeli</span>
+                    </label>
+                </div>
+                <div class="radio-card">
+                    <input type="radio" name="fee_bearer" id="fee-penjual" value="Penjual">
+                    <label for="fee-penjual" class="radio-label">
+                        <i class="fa-solid fa-store" style="margin-bottom:4px;"></i>
+                        <span>Penjual</span>
+                    </label>
+                </div>
+                <div class="radio-card">
+                    <input type="radio" name="fee_bearer" id="fee-split" value="Bagi Dua">
+                    <label for="fee-split" class="radio-label">
+                        <i class="fa-solid fa-handshake" style="margin-bottom:4px;"></i>
+                        <span>Bagi Dua</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Nomor WhatsApp Pembeli</label>
+            <div class="input-wrapper">
+                <input type="tel" id="no-pembeli" class="form-control no-prefix" placeholder="Contoh: 08123456789" inputmode="numeric">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Nomor WhatsApp Penjual</label>
+            <div class="input-wrapper">
+                <input type="tel" id="no-penjual" class="form-control no-prefix" placeholder="Contoh: 08987654321" inputmode="numeric">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Detail Barang / Transaksi</label>
+            <textarea id="detail-barang" class="form-control no-prefix" placeholder="Tuliskan nama barang, kondisi, atau catatan khusus..."></textarea>
+        </div>
+
+        <!-- Warning Rekening -->
+        <div style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 10px; font-size: 11px; color: #9F1239; font-weight: 600; text-align: center; margin-bottom: 16px;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Ingat! Transfer HANYA ke rekening a.n PT. HANSEN GLOBAL MANDIRI
+        </div>
+
+        <button class="btn btn-wa" id="btn-submit-wa">
+            <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i>
+            <span>Kirim Transaksi via WhatsApp</span>
+        </button>
+
+        <button class="btn btn-outline" id="btn-back-step1">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Kembali ke Kalkulator</span>
+        </button>
+    </div>
+</div>
+
+<!-- Modal Dispatcher -->
+<div class="modal-overlay" id="modal-wa">
+    <div class="modal-card">
+        <div class="modal-title">Kirim Data Transaksi</div>
+        <div class="modal-desc">Pilih jalur pengiriman WhatsApp di bawah ini:</div>
+        
+        <div class="preview-box" id="preview-text"></div>
+
+        <div class="modal-actions">
+            <a id="link-wa-app" class="btn btn-wa" href="#" target="_blank" style="text-decoration: none;">
+                <i class="fa-brands fa-whatsapp"></i> Buka Aplikasi WhatsApp
+            </a>
+            <a id="link-wa-web" class="btn btn-outline" href="#" target="_blank" style="text-decoration: none; font-size: 13px;">
+                <i class="fa-solid fa-laptop"></i> Buka via WhatsApp Web
+            </a>
+            <button class="btn btn-outline" id="btn-copy-msg" style="font-size: 13px;">
+                <i class="fa-regular fa-copy"></i> Salin Pesan Transaksi
+            </button>
+            <button class="btn btn-outline" id="btn-close-modal" style="border: none; color: #94A3B8; margin-top: 4px;">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ADMIN_WA = "628989566888";
+    let rawNominal = 0;
+
+    // Elements
+    const inputNominal = document.getElementById('input-nominal');
+    const resNominal = document.getElementById('res-nominal');
+    const resFee = document.getElementById('res-fee');
+    const resTotal = document.getElementById('res-total');
+
+    const formSummaryNominal = document.getElementById('form-summary-nominal');
+    const formSummaryFee = document.getElementById('form-summary-fee');
+
+    const step1Tab = document.getElementById('step1-tab');
+    const step2Tab = document.getElementById('step2-tab');
+    const step1Content = document.getElementById('step1-content');
+    const step2Content = document.getElementById('step2-content');
+
+    const btnToStep2 = document.getElementById('btn-to-step2');
+    const btnBackStep1 = document.getElementById('btn-back-step1');
+    const btnSubmitWa = document.getElementById('btn-submit-wa');
+
+    const modalWa = document.getElementById('modal-wa');
+    const previewText = document.getElementById('preview-text');
+    const linkWaApp = document.getElementById('link-wa-app');
+    const linkWaWeb = document.getElementById('link-wa-web');
+    const btnCopyMsg = document.getElementById('btn-copy-msg');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+
+    // Format Rupiah
+    function formatRupiah(number) {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+    }
+
+    // Process Calculation
+    function calculate() {
+        let val = inputNominal.value.replace(/\D/g, '');
+        rawNominal = parseInt(val) || 0;
+        inputNominal.value = rawNominal ? rawNominal.toLocaleString('id-ID') : '';
+
+        let fee = Math.round(rawNominal * 0.05);
+        let total = rawNominal + fee;
+
+        resNominal.innerText = formatRupiah(rawNominal);
+        resFee.innerText = formatRupiah(fee);
+        resTotal.innerText = formatRupiah(total);
+
+        formSummaryNominal.innerText = formatRupiah(rawNominal);
+        formSummaryFee.innerText = formatRupiah(fee);
+    }
+
+    inputNominal.addEventListener('input', calculate);
+
+    // Navigation Step
+    function goToStep(step) {
+        if(step === 2) {
+            if(rawNominal <= 0) {
+                alert('Silakan masukkan nilai transaksi terlebih dahulu.');
+                return;
+            }
+            step1Tab.classList.remove('active');
+            step2Tab.classList.add('active');
+            step1Content.classList.remove('active');
+            step2Content.classList.add('active');
+        } else {
+            step2Tab.classList.remove('active');
+            step1Tab.classList.add('active');
+            step2Content.classList.remove('active');
+            step1Content.classList.active ? null : step1Content.classList.add('active');
+        }
+    }
+
+    btnToStep2.addEventListener('click', () => goToStep(2));
+    btnBackStep1.addEventListener('click', () => goToStep(1));
+
+    // Submit WA
+    btnSubmitWa.addEventListener('click', function() {
+        const noPembeli = document.getElementById('no-pembeli').value.trim();
+        const noPenjual = document.getElementById('no-penjual').value.trim();
+        const detailBarang = document.getElementById('detail-barang').value.trim();
+        const feeBearer = document.querySelector('input[name="fee_bearer"]:checked').value;
+
+        if(!noPembeli) {
+            alert('Silakan isi Nomor WhatsApp Pembeli.');
+            return;
+        }
+        if(!noPenjual) {
+            alert('Silakan isi Nomor WhatsApp Penjual.');
+            return;
+        }
+
+        let fee = Math.round(rawNominal * 0.05);
+
+        let message = `*FORM TRANSAKSI HANSEN REKBER*\n`;
+        message += `==============================\n`;
+        message += `• *Nilai Transaksi:* ${formatRupiah(rawNominal)}\n`;
+        message += `• *Biaya Rekber:* ${formatRupiah(fee)}\n`;
+        message += `• *Tanggungan Biaya:* ${feeBearer}\n`;
+        message += `------------------------------\n`;
+        message += `• *No. Pembeli:* ${noPembeli}\n`;
+        message += `• *No. Penjual:* ${noPenjual}\n`;
+        message += `• *Detail Barang:* ${detailBarang || '-'}\n`;
+        message += `==============================\n`;
+        message += `_Transfer HANYA melalui rekening a.n PT. HANSEN GLOBAL MANDIRI_`;
+
+        let encodedMsg = encodeURIComponent(message);
+
+        // Set Link URLs
+        linkWaApp.href = `https://api.whatsapp.com/send?phone=${ADMIN_WA}&text=${encodedMsg}`;
+        linkWaWeb.href = `https://web.whatsapp.com/send?phone=${ADMIN_WA}&text=${encodedMsg}`;
+        
+        previewText.innerText = message;
+        modalWa.classList.add('active');
+    });
+
+    btnCopyMsg.addEventListener('click', function() {
+        navigator.clipboard.writeText(previewText.innerText).then(() => {
+            alert('Pesan transaksi berhasil disalin! Silakan tempel/paste di chat WhatsApp Admin.');
+        }).catch(() => {
+            alert('Gagal menyalin pesan. Silakan salin teks secara manual.');
+        });
+    });
+
+    btnCloseModal.addEventListener('click', function() {
+        modalWa.classList.remove('active');
+    });
+</script>
+
+</body>
+</html>
